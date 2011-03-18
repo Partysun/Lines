@@ -11,6 +11,8 @@ gl:genBalls()
 --print all gamelogic information.
 gl:print()
 
+local timer = 10 * 1000 -- in millsec 220 second
+
 --display.setStatusBar( display.HiddenStatusBar )
 
 
@@ -46,7 +48,10 @@ end
  gameTable:addEventListener("touch", gameTable)
 
  local function gameLoop(event)
- --print("frame")
+	print("Timer: " .. timer - system.getTimer())
+	if system.getTimer() > timer then
+		print("Time is over! ;)")
+	end
  end
 
  -- Call the gameLoop function EVERY frame,

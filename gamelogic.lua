@@ -4,6 +4,10 @@ require 'middleclass'
 -- Argument:
 --   sides:
 --     sides - xCount , yCount - Size of x and y sides of game screen.
+--   maxTypes:
+--	 	desribe how much types of ball. Standart for classic Lines - 7 types ob ball
+--	 addCountBalls:
+--		describe how much add balls on the game tabel after each step
 -------------------------------------------------------------------
 Gamelogic = class('Gamelogic') --this is the same as class('Person', Object) or Object:subclass('Person')
 
@@ -18,17 +22,25 @@ Gamelogic.addCountBalls = 3
 Gamelogic.MAIN_HERO = 8
 Gamelogic.KEY = 9
 Gamelogic.CHEST = 10
+--
+Gamelogic.isHaveKey = false
+Gamelogic.isGame = "Process"
 
+-- Îñíàâíàÿ òàáëèöà âñåõ îáúåêòîâ èãğîâîãî ïîëÿ
 local _body = {}
+-- Âñïîìîãàòåëüíàÿ òàáëèöà äëÿ âû÷èñëåíèÿ ïîèñêà ïóòåé
 local _temp = {}
+
+-- Ôëàã îïèñûâàşùèé ñîñòîÿíèå âûäåëåí ëè øàğ èëè íåò
 local ballClick = false
 
+-- Ìåòîä îáíóëåíèÿ è ñîçäàíèÿ òàáëèöû èãğîâîãî ïîëÿ
 local _initGameTable = function()
 	local body = {}
-	for i=1,9 do
+	for i=1,Gamelogic.xCount do
 		-- âñòàâëÿåì íîâóş "ñòğîêó" â äâóõìåğíûé ìàññèâ, ò.å. çàïîëíåíèå ïî âåğòèêàëè
 		table.insert(body,{})
-		for j=1,9 do
+		for j=1,Gamelogic.yCount do
 			-- çàïîëíÿåì ìàññèâ ïî ãîğèçîíòàëè
 			table.insert(body[i],0)
 		end
@@ -49,7 +61,9 @@ function Gamelogic:initialize(sides,maxTypes,addCountBalls)
 	Gamelogic:print()
 end
 
-
+----------------------------------
+-- Generator game objects block --
+----------------------------------
 -- Temp fuction for set new value in any position of game table
 function Gamelogic:setNewBall( i, j, typeBall)
 	if _body[i][j] == 0 then
@@ -65,9 +79,9 @@ function Gamelogic:setNewGarant(ballType)
 	local _count = 0
 	repeat
 		if Gamelogic:setNewBall( math.random(1,self.xCount), math.random(1,self.yCount), ballType) then
-			_count = 1
+			_count = _count + 1
 		end
-	until count ~= 1
+	until _count == 1
 end
 
 --Generate balls on the game table
@@ -164,9 +178,7 @@ end
 -- Move Ball
 function Gamelogic:moveBall(xPosBall,yPosBall,xTarget,yTarget)
 	--CHECK VALID INPUT VALUE
-	if _body[xPosBall][yPosBall] ~= 0 and _body[xTarget][yTarget] == 0 then
-		--Need check path find for xyPosBall
-		--TODO: path find...
+	--if _body[xPosBall][yPosBall] ~= 0 and _body[xTarget][yTarget] == 0 then
 		--MOVE BALL
 		print("Move ball")
 		_body[xTarget][yTarget] = _body[xPosBall][yPosBall]
@@ -175,7 +187,7 @@ function Gamelogic:moveBall(xPosBall,yPosBall,xTarget,yTarget)
 			--generate new balls
 			Gamelogic:genBalls()
 		end
-	end
+	--end
 end
 
 -- Ğåêóğñèâíàÿ ôóíêöèÿ îáõîäà ÿ÷ååê òàáëèöû.
@@ -184,10 +196,21 @@ end
 pathFinder = function(x,y)
 	for i=x-1,x+1 do
 		for j=y-1,y+1 do
-			if (i >= 1) and (i <= 9) and (j >= 1) and (j <= 9)
-			and (_body[i][j]==0) and (_temp[i][j]==0) then
-				_temp[i][j] = 1
-				pathFinder(i,j)
+			if (i >= 1) and (i <= Gamelogic.xCount) and (j >= 1) and (j <= Gamelogic.yCount)
+			and ((_body[i][j]==0) or (_body[i][j] == Gamelogic.KEY) or (_body[i][j] == Gamelogic.CHEST)) and (_temp[i][j]==0) then
+				 local continue = false
+				 if (i==x-1) and (j==y-1) then continue = true
+				 end
+				 if (i==x+1) and (j==y-1) then continue = true
+				 end
+				 if (i==x+1) and (j==y+1) then continue = true
+				 end
+			     if (i==x-1) and (j==y+1) then continue = true
+				 end
+				 if continue ~= true then
+					_temp[i][j] = 1
+					pathFinder(i,j)
+				 end
 			end
 		end
 	end
@@ -217,12 +240,25 @@ function Gamelogic:onClickTable(i,j)
 		Gamelogic:printTemp()
 		return true
 	end
+--check step by hero
+	if _body[xTemp][yTemp] == Gamelogic.MAIN_HERO and ballClick == true and _temp[x][y] == 1 then
+		if _body[x][y] == Gamelogic.KEY then
+			Gamelogic:moveBall(xTemp,yTemp,x,y)
+			self.isHaveKey = true
+		end
+		if _body[x][y] == Gamelogic.CHEST and self.isHaveKey == true then
+			Gamelogic:moveBall(xTemp,yTemp,x,y)
+			self.isGame = "Win"
+		end
+	end
 	-- If Zero?
 	if _body[x][y]==0 and ballClick == true and _temp[x][y]==1 then
 		ballClick = false
 		Gamelogic:moveBall(xTemp,yTemp,x,y)
+
 		return false
 	end
+
 	return false
 end
 

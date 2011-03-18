@@ -54,6 +54,15 @@ function GameGraphic:drawScreen(gameTable, pathTableView, body, pathTable)
 				rect:setFillColor(0, 180, 255)
 				pathTableView:insert(rect)
 			end
+			if pathTable[i][j] == 1 and (body[i][j] == Gamelogic.KEY or body[i][j] == Gamelogic.CHEST) then
+				local border = display.newRect(53.5*j, 30*i, 51, 28)
+				border.strokeWidth = 2
+				border:setStrokeColor(255, 0, 0)
+				pathTableView:insert(border)
+				local rect = display.newRect(53.5*j, 30*i, 51, 28)
+				rect:setFillColor(0, 180, 255)
+				pathTableView:insert(rect)
+			end
 		end
 	end
 	gameTable.x = -53
