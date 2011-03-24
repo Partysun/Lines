@@ -18,11 +18,11 @@ local timer = 10 * 1000 -- in millsec 220 second
 -- Create a gray background
 --local background = display.newRect(display.screenOriginX,display.screenOriginY, 480-2*display.screenOriginX, 320-display.screenOriginY )
 --background:setFillColor(0, 80)
-
-local background = display.newRect(0,0, 480, 320)
-background:setFillColor(255, 80)
-local backgroundUp = display.newRect(0,0, 480, 50)
-backgroundUp:setFillColor(20, 80)
+--local background = display.newRect(0,0, 480, 320)
+--background:setFillColor(255, 80)
+local backgroundUp = display.newImage( "wall.png" )
+--display.newRect(0,0, 480, 50)
+--backgroundUp:setFillColor(20, 80)
 
  --local gameTable = display.newGroup()
  local pathTableView = display.newGroup()

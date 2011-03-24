@@ -34,12 +34,15 @@ function GameGraphic:setGameTable(bodyTable)
 	_bodyTable = bodyTable
 end
 
+local floor_texture = {"1a.png","2a.png","3a.png","4a.png","5a.png"}
+
 function GameGraphic:initGameScreen()
 	if _bodyTable ~= nil then
 	for i=1,Gamelogic.xCount do
 			for j=1,Gamelogic.yCount do
-					local rect = display.newRect(53.5*j, 30*i, 51, 28)
-					rect:setFillColor(170, 170, 170)
+					local rect = display.newImage( floor_texture[math.random(1,5)],53.5*j, 30*i)
+					--display.newRect(53.5*j, 30*i, 51, 28)
+					--rect:setFillColor(170, 170, 170)
 					_floor:insert(rect)
 					_typeBalls = _bodyTable[i][j]
 				if _typeBalls == 8 then
@@ -214,7 +217,7 @@ function GameGraphic:updatescreen()
 				local continue = false
 				for n=1,_gameTable.numChildren do
 				  local child = _gameTable[n]
-				  print ("CHISLO:" .. _gameTable.numChildren)
+				  --print ("CHISLO:" .. _gameTable.numChildren)
 				  if child ~= nil then
 					  if child.xfoo == i and child.yfoo == j then
 						if _typeBalls == 0 then
