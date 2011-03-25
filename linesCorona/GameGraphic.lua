@@ -16,8 +16,6 @@ local _floor = display.newGroup()
 --_gameTable - игровая доска: содержит шарики и игрока с артефактами
 local _gameTable = display.newGroup()
 
-pathTableView = {}
-
 -- TEXTURE PATH
 local textures_path = ""
 
@@ -111,67 +109,21 @@ function GameGraphic:update()
 
 end
 
-function GameGraphic:drawScreen(gameTable, pathTableView, body, pathTable)
-	print"startdraw"
-
-	--               Желтый ,    Голубой ,    Синий ,      Зеленый ,    Оранжевый ,   Розовый ,      Красный
-	typeColors = { {255,255,0},{0,255,255},{0,51,255},{51,255,51},{255,153,0},{255,51,102},{255,0,0}}
-
+-- Показывает возможные пути движения
+function GameGraphic:renderpath(pathTable)
+	local pathTableView = display.newGroup()
 	for i=1,Gamelogic.xCount do
 		for j=1,Gamelogic.yCount do
-			local rect = display.newRect(53.5*j, 30*i, 51, 28)
-			rect:setFillColor(170, 170, 170)
-					gameTable:insert(rect)
-				_typeBalls =body[i][j]
-			if _typeBalls ~= 0 and _typeBalls <= 7 then
-				local circle = display.newCircle(53.5*j+27, 30*i+15, 12)
-				circle:setFillColor(typeColors[_typeBalls][1],typeColors[_typeBalls][2],typeColors[_typeBalls][3])
-				gameTable:insert(circle)
-			end
-			if _typeBalls == 8 then
-				local heroImage = display.newImageRect(textures_path.."hero.png", 26, 26)
-				heroImage.x = 53.5*j+27
-				heroImage.y = 30*i+15
-				gameTable:insert(heroImage)
-			end
-			if _typeBalls == 9 then
-				local keyImage = display.newImageRect(textures_path.."key.png", 26, 26)
-				keyImage.x = 53.5*j+27
-				keyImage.y = 30*i+15
-				gameTable:insert(keyImage)
-			end
-			if _typeBalls == 10 then
-				local keyImage = display.newImageRect(textures_path.."chest.png", 26, 32)
-				keyImage.x = 53.5*j+27
-				keyImage.y = 30*i+15
-				gameTable:insert(keyImage)
-			end
 			if pathTable[i][j].isObstacle == 1 then
 				local rect = display.newRect(53.5*j, 30*i, 51, 28)
-				rect:setFillColor(0, 180, 255)
-				pathTableView:insert(rect)
-			end
-			if pathTable[i][j].isObstacle == 1 and (body[i][j] == Gamelogic.KEY or body[i][j] == Gamelogic.CHEST) then
-				local border = display.newRect(53.5*j, 30*i, 51, 28)
-				border.strokeWidth = 2
-				border:setStrokeColor(255, 0, 0)
-				pathTableView:insert(border)
-				local rect = display.newRect(53.5*j, 30*i, 51, 28)
-				rect:setFillColor(0, 180, 255)
+				rect:setFillColor(0, 250, 180 , 80)
 				pathTableView:insert(rect)
 			end
 		end
 	end
-	gameTable.x = -53
-	gameTable.y = 20.5
 	pathTableView.x = -53
 	pathTableView.y = 20.5
-		for i=1,gameTable.numChildren do
-  local child = gameTable[i]
-  local description = (gameTable.isVisible and "visible") or "not visible"
-  print( "child["..i.."] is " .. tostring(gameTable[i].x) )
-  end
-	print "stopdraw"
+	return pathTableView
 end
 
 -- Отрисовывает анимацию движения объектов

@@ -125,10 +125,6 @@ function Gamelogic:getPathTable()
 	return(_paths)
 end
 
-function Gamelogic:getSpawnTable()
-	return(_spawn)
-end
-
 -- Check all lines  for delete
 local _deleteBallLine = function()
 	print("Check game table...")
@@ -214,7 +210,7 @@ pathFinder = function(x,y)
 	for i=x-1,x+1 do
 		for j=y-1,y+1 do
 			if (i >= 1) and (i <= Gamelogic.xCount) and (j >= 1) and (j <= Gamelogic.yCount)
-			and ((_body[i][j]==0) or (_body[i][j] == Gamelogic.KEY) or (_body[i][j] == Gamelogic.CHEST)) and (_paths[i][j].isObstacle == 0) then
+			and (_body[i][j]==0) and (_paths[i][j].isObstacle == 0) then
 				 local continue = false
 				 if (i==x-1) and (j==y-1) then continue = true
 				 end

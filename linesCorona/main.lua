@@ -36,24 +36,23 @@ local backgroundUp = display.newImage( "wall.png" )
 -- Touch event on gameTable
 function touch(event)
 	if event.phase == "began" then
-		print (gg.isUpdate)
+	if (event.y > 50) then
+		pathTableView.isVisible = false
+		pathTableView = nil
+		pathTableView = display.newGroup()
 		if gg.isUpdate == true then
 			local temp_y = event.y - 50
 			local x = math.floor(event.x / 53.5)+1
 			local y = math.floor(temp_y / 30)+1
 			gg.isUpdate = false
 			pathTableView.isVisible = gl:onClickTable(x,y)
-			--print (pathTableView.isVisible)
+			if pathTableView.isVisible == true then
+				pathTableView = gg:renderpath(gl:getPathTable())
+			end
 			gg:animate(gl.path)
 			gl.path = nil
 		end
 	end
-	if event.phase == "ended" then
-		if gg.isUpdate == true then
-			gl:print()
-			pathTableView.isVisible = false
-			pathTableView = display.newGroup()
-		end
 	end
 end
 
