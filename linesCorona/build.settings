@@ -1,14 +1,20 @@
-settings = 
+settings =
 {
-
-	orientation = 
-	{
-		default = "landscapeRight",
-		supported = 
-		{
-		"landscapeRight",
-		},
-					
-	},
+        orientation =
+        {
+                default = "landscapeRight",
+				content = "landscapeRight",
+				supported =
+					{
+							"landscapeRight"
+					},
+        },
+ 
+        iphone =
+        {
+                plist =
+                {
+                        UIPrerenderedIcon = true
+                },
+        }
 }
-	
